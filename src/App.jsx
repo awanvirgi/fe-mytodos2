@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom"
+import Detail from "./pages/detail";
 import Home from "./pages/home"
 import Login from "./pages/login"
 import Register from "./pages/register"
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={isLogin ? <Home /> : <Navigate to="/login" />}></Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/:id" element={<Detail/>} />
       </Routes>
     </div>
   )

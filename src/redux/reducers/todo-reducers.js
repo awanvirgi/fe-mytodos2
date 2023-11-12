@@ -4,7 +4,8 @@ const initialValue = {
     todos: [],
     editprops: {
         id: 0,
-        value: ""
+        title: "",
+        detail:""
     },
     isLoading: false,
     message:"",
@@ -27,7 +28,8 @@ function todoReducer(state = initialValue, action) {
         case "GET_TODO":
             let editValue = {
                 id: action.payload.id,
-                value: action.payload.value
+                title: action.payload.title,
+                detail: action.payload.detail,
             }
             return {
                 ...state,
@@ -56,7 +58,20 @@ export function getAllTodo() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         };
-        const { data } = await axios.get(`http://localhost:3000/todos/`, { headers })
+        const { data } = await axios.get(`http://localhost:3000/users/todos`, { headers })
+        dispatch(successGetTodo(data))
+    }
+}
+export function getTodoByid(id) {
+    return async function (dispatch) {
+        dispatch(startFetching())
+        console.log(id)
+        const token = localStorage.getItem("token")
+        const headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        };
+        const { data } = await axios.get(`http://localhost:3000/users/todos/${id}`, { headers })
         dispatch(successGetTodo(data))
     }
 }
@@ -69,7 +84,7 @@ export function toggleTodo(id) {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         };
-        await axios.patch(`http://localhost:3000/todos/${id}/toggle`, {}, { headers })
+        await axios.patch(`http://localhost:3000/users/todos/${id}/toggle`, {}, { headers })
         dispatch(getAllTodo())
     }
 }
@@ -82,8 +97,9 @@ export function addTodo(data) {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         };
-        await axios.post(`http://localhost:3000/todos/`, { data }, { headers })
-
+        console.log("test")
+        await axios.post(`http://localhost:3000/users/todos/`, { data }, { headers })
+        console.log("test")
         dispatch(getAllTodo())
     }
 }
@@ -95,13 +111,14 @@ export function getEditTodo(props) {
 }
 export function editTodo(data) {
     return async function (dispatch) {
+        console.log(data)
         dispatch(startFetching())
         const token = localStorage.getItem("token")
         const headers = {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         };
-        await axios.patch(`http://localhost:3000/todos/${data.id}`, { data }, { headers })
+        await axios.patch(`http://localhost:3000/users/todos/${data.id}`, { data }, { headers })
         dispatch(getAllTodo())
     }
 }
@@ -113,7 +130,7 @@ export function deleteTodo(id) {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         };
-        await axios.delete(`http://localhost:3000/todos/${id}`, { headers })
+        await axios.delete(`http://localhost:3000/users/todos/${id}`, { headers })
 
         dispatch(getAllTodo())
     }
